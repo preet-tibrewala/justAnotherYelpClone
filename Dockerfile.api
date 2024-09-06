@@ -1,0 +1,21 @@
+# Dockerfile.api
+
+FROM node:18
+
+# Set working directory
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the wait-for-it script
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+# Copy the rest of the application code
+COPY . .
+
+# Start the application
+CMD ["./wait-for-it.sh", "rabbitmq:5672", "--", "node", "server.js"]
+

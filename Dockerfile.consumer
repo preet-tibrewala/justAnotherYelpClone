@@ -1,0 +1,14 @@
+
+FROM node:18
+
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+# Copy the wait-for-it script
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+COPY . .
+WORKDIR /usr/src/app/api
+EXPOSE 8000
+CMD ["./wait-for-it.sh", "rabbitmq:5672", "--", "node", "thumbnailGenerator.js" ]
